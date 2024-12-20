@@ -1,0 +1,328 @@
+<!-- Form Toggle Button -->
+<div class="fixed bottom-8 left-1/2 transform -translate-x-1/2">
+  <button
+    (click)="showForm = !showForm"
+    class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full shadow-lg transition-all duration-300 flex items-center gap-2"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+    </svg>
+    Update Health Data
+  </button>
+</div>
+
+<!-- Modal Backdrop -->
+<div *ngIf="showForm"
+     class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 transition-opacity duration-300 ease-in-out"
+     (click)="showForm = false">
+</div>
+
+<!-- Modal -->
+<div *ngIf="showForm"
+     class="fixed inset-0 z-50 overflow-y-auto"
+     aria-labelledby="modal-title"
+     role="dialog"
+     aria-modal="true">
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <!-- Modal Panel -->
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-4xl transform transition-all duration-300 ease-in-out"
+         (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between p-6 border-b">
+        <h3 class="text-xl font-semibold text-gray-900">
+          Update Health Data
+        </h3>
+        <button
+          (click)="showForm = false"
+          class="text-gray-400 hover:text-gray-500 focus:outline-none p-2 hover:bg-gray-100 rounded-full transition-colors"
+        >
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6">
+        <form (ngSubmit)="onSubmit()" #predictionForm="ngForm" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div *ngFor="let key of getFormKeys()" class="space-y-2">
+            <label [for]="key" class="block text-sm font-medium text-gray-700">
+              {{ getFieldLabel(key) }}
+            </label>
+            <input
+              [id]="key"
+              type="number"
+              [name]="key"
+              [ngModel]="getRequestValue(key)"
+              (ngModelChange)="setRequestValue(key, $event)"
+              required
+              class="w-full px-2.5 py-1.5 text-sm border border-gray-200 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            >
+          </div>
+
+          <!-- Form Footer -->
+          <div class="col-span-1 md:col-span-3 flex justify-center mt-6">
+            <button
+              type="submit"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg transform transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center gap-2"
+            >
+              <span>Submit Prediction</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success Animation -->
+<div *ngIf="showSuccess"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70 backdrop-blur-sm transition-all duration-300">
+  <div class="bg-white rounded-full p-4 shadow-2xl transform transition-all duration-500 scale-110">
+    <div class="text-green-500">
+      <svg class="w-24 h-24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+    </div>
+  </div>
+</div><!-- prediction-form.component.html -->
+<div class="min-h-screen bg-gray-100">
+<!-- Header Section -->
+<div class="p-4 bg-white shadow-sm">
+<div class="max-w-7xl mx-auto flex justify-between items-center">
+  <div class="flex items-center space-x-4">
+    <img src="assets/doctor-profile.jpg" alt="Profile" class="w-12 h-12 rounded-full">
+    <div>
+      <h1 class="text-xl font-semibold">Will Smith</h1>
+      <button class="text-sm text-gray-500 hover:text-gray-700">Logout</button>
+    </div>
+  </div>
+  <div class="text-right">
+    <div class="text-lg">18°C</div>
+    <div class="text-sm text-gray-500">Little Bit Cloudy</div>
+    <div class="text-sm text-gray-500">{{today | date:'EEEE, d MMMM'}}</div>
+  </div>
+</div>
+</div>
+
+<!-- Main Content -->
+<div class="max-w-7xl mx-auto p-6">
+<div class="grid grid-cols-3 gap-8">
+  <!-- Left Column -->
+  <div class="space-y-6">
+    <!-- Eaten Card -->
+    <div class="bg-white rounded-xl p-6 shadow-md">
+      <h3 class="text-gray-600 mb-4">Eaten</h3>
+      <div class="flex items-center">
+        <div class="relative w-20 h-20">
+          <svg class="w-full h-full transform -rotate-90">
+            <circle
+              cx="40"
+              cy="40"
+              r="35"
+              stroke="#e5e7eb"
+              stroke-width="5"
+              fill="none"
+            />
+            <circle
+              cx="40"
+              cy="40"
+              r="35"
+              stroke="#06b6d4"
+              stroke-width="5"
+              fill="none"
+              [attr.stroke-dasharray]="getEatenProgress()"
+            />
+          </svg>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <span class="text-lg font-semibold">70%</span>
+          </div>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-500">3000 cal</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Card -->
+    <div class="bg-white rounded-xl p-6 shadow-md">
+      <h3 class="text-gray-600 mb-4">Activity</h3>
+      <div class="flex items-center mb-4">
+        <span class="text-2xl font-bold">2032</span>
+        <span class="ml-2 text-gray-500">Steps</span>
+      </div>
+      <div class="h-12">
+        <svg class="w-full h-full" viewBox="0 0 200 50">
+          <path
+            d="M0,25 C20,10 40,35 60,25 S80,15 100,25 S120,35 140,25 S160,15 180,25"
+            fill="none"
+            stroke="#06b6d4"
+            stroke-width="2"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Water Card -->
+    <div class="bg-white rounded-xl p-6 shadow-md">
+      <h3 class="text-gray-600 mb-4">Water</h3>
+      <div class="flex items-center">
+        <span class="text-2xl font-bold">4</span>
+        <span class="ml-2 text-gray-500">GL</span>
+      </div>
+      <p class="text-sm text-gray-500 mt-2">8 glasses per day</p>
+      <div class="mt-4">
+        <div class="bg-cyan-100 h-2 rounded-full">
+          <div class="bg-cyan-500 h-full rounded-full" style="width: 50%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Center Column -->
+  <div class="flex items-center justify-center">
+    <div class="relative">
+      <svg class="w-80 h-80 transform -rotate-90">
+        <circle
+          cx="160"
+          cy="160"
+          r="150"
+          stroke="#e5e7eb"
+          stroke-width="20"
+          fill="none"
+        />
+        <circle
+          cx="160"
+          cy="160"
+          r="150"
+          stroke="#06b6d4"
+          stroke-width="20"
+          fill="none"
+          [attr.stroke-dasharray]="circumference"
+          [attr.stroke-dashoffset]="getDashOffset()"
+        />
+      </svg>
+      <div class="absolute inset-0 flex flex-col items-center justify-center">
+        <span class="text-7xl font-bold">80</span>
+        <span class="text-gray-500">Fitness score today</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column -->
+  <div class="space-y-6">
+    <!-- Blood Glucose Card -->
+    <div class="bg-white rounded-xl p-6 shadow-md">
+      <h3 class="text-gray-600 mb-4">Blood Glucose</h3>
+      <div class="flex items-center mb-4">
+        <span class="text-2xl font-bold">136</span>
+        <span class="ml-2 text-gray-500">mg/dl</span>
+      </div>
+      <div class="h-12">
+        <svg class="w-full h-full" viewBox="0 0 200 50">
+          <path
+            d="M0,25 C20,35 40,15 60,25 S80,35 100,25 S120,15 140,25"
+            fill="none"
+            stroke="#ef4444"
+            stroke-width="2"
+          />
+        </svg>
+      </div>
+      <p class="text-sm text-gray-500 mt-2">After fasting</p>
+    </div>
+
+    <!-- Heart Rate Card -->
+    <div class="bg-white rounded-xl p-6 shadow-md">
+      <h3 class="text-gray-600 mb-4">Heart</h3>
+      <div class="flex items-center mb-4">
+        <span class="text-2xl font-bold">72</span>
+        <span class="ml-2 text-gray-500">bpm</span>
+      </div>
+      <div class="h-12">
+        <svg class="w-full h-full" viewBox="0 0 200 50">
+          <path
+            d="M0,25 L20,15 L40,35 L60,15 L80,35 L100,25"
+            fill="none"
+            stroke="#ef4444"
+            stroke-width="2"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Diabetes Status Card -->
+    <div class="bg-white rounded-xl p-6 shadow-md">
+      <h3 class="text-gray-600 mb-4">Diabetes Status</h3>
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center">
+          <!-- Icon based on prediction -->
+          <div [ngSwitch]="prediction?.classification" class="mr-3">
+            <!-- No Diabetes -->
+            <svg *ngSwitchCase="'No Diabetes Detectada'" class="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <!-- Diabetes Type 1 -->
+            <svg *ngSwitchCase="'Diabetes Tipo 1'" class="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <!-- Diabetes Type 2 -->
+            <svg *ngSwitchCase="'Diabetes Tipo 2'" class="w-8 h-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <!-- Default/Loading state -->
+            <svg *ngSwitchDefault class="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-medium">{{ prediction?.classification || 'No data' }}</p>
+            <p class="text-sm text-gray-500">{{ prediction?.interpretation || 'Waiting for analysis' }}</p>
+          </div>
+        </div>
+        <div *ngIf="prediction?.prediction !== undefined" class="text-right">
+          <span class="text-2xl font-bold">{{ (prediction.prediction * 100).toFixed(1) }}%</span>
+          <p class="text-sm text-gray-500">Probability</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Prediction Form -->
+<div *ngIf="showForm" class="mt-6 bg-white rounded-xl p-6 shadow-lg">
+  <form (ngSubmit)="onSubmit()" #predictionForm="ngForm" class="grid grid-cols-2 md:grid-cols-3 gap-6">
+    <div *ngFor="let key of getFormKeys()">
+      <label class="block text-sm font-medium text-gray-700 capitalize mb-1">
+        {{ getFieldLabel(key) }}
+      </label>
+      <input
+        type="number"
+        [name]="key"
+        [ngModel]="getRequestValue(key)"
+        (ngModelChange)="setRequestValue(key, $event)"
+        required
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      >
+    </div>
+    <div class="col-span-2 md:col-span-3 text-center">
+      <button
+        type="submit"
+        class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg transition-colors"
+      >
+        Submit Prediction
+      </button>
+    </div>
+  </form>
+</div>
+</div>
+</div>
